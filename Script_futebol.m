@@ -1,19 +1,6 @@
-
-% Abre as imagens
-noPlayerImage = rgb2gray(imread('campo0.JPG'));
-player = rgb2gray(imread('campo1.JPG'));
-
-[i,j] = size(noPlayerImage);
-
-passoLinha = 1;
-passoColuna = 1;
-for linha=1:passoLinha:i
-    for coluna=1:passoColuna:j
-        image1 = noPlayerImage(linha:linha+(passoLinha-1),coluna:coluna+(passoColuna-1));
-        image2 = player(linha:linha+(passoLinha-1),coluna:coluna+(passoColuna-1));
-        valor = compare(image1,image2);
-    end
-end
+# Compatibilidade Octave
+pkg load image
+pkg load statistics
 
 function [itsDifferent] = compare(image1,image2)
     
@@ -26,6 +13,31 @@ function [itsDifferent] = compare(image1,image2)
     for i=1:size(hist1)
         if hist1(i) - hist2(i) > threshold
             itsDifferent = 1;
+        end
+    end
+end
+
+% Abre as imagens
+backupPlayerImage = imread('campo1.JPG');
+
+noPlayerImage = rgb2gray(imread('campo0.JPG'));
+player = rgb2gray(imread('campo1.JPG'));
+
+[i,j] = size(noPlayerImage);
+
+passoLinha = 15;
+passoColuna = 25;
+for linha=1:passoLinha:i
+    for coluna=1:passoColuna:j
+        image1 = noPlayerImage(linha:linha+(passoLinha-1),coluna:coluna+(passoColuna-1));
+        image2 = player(linha:linha+(passoLinha-1),coluna:coluna+(passoColuna-1));
+        valor = 0;
+        valor = compare(image1,image2);
+        if valor
+          backupPlayerImage(linha:linha+(passoLinha-1),coluna:coluna+(passoColuna-1),1:3) = true;
+          bounds = bwboundaries(noPlayerImage);       
+          imshow(backupPlayerImage);
+          break
         end
     end
 end
